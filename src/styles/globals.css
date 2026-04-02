@@ -10,20 +10,46 @@ body {
   background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
 }
 
-.mono {
-  font-family: 'JetBrains Mono', monospace;
+/* Плавная анимация для меню */
+.mobile-menu {
+    transition: transform 0.3s ease-in-out;
+}
+.mobile-menu.closed {
+    transform: translateX(-100%);
+}
+.mobile-menu.open {
+    transform: translateX(0);
 }
 
-.gradient-border {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.05));
-  border: 1px solid rgba(139, 92, 246, 0.2);
+/* Затемнение фона */
+.overlay {
+    transition: opacity 0.3s ease-in-out;
+}
+.overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+.overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
 }
 
-.card-hover {
-  transition: all 0.3s ease;
+/* Анимация гамбургера */
+.hamburger-line {
+    transition: all 0.3s ease-in-out;
 }
 
-.card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 40px -10px rgba(139, 92, 246, 0.2);
+/* Кастомный скроллбар для красоты */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #0f172a; 
+}
+::-webkit-scrollbar-thumb {
+    background: #334155; 
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #475569; 
 }

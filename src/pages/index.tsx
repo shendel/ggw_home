@@ -9,6 +9,8 @@ import AppRootWrapper from '@/components/AppRootWrapper'
 import Home from '@/views/Home'
 import Page404 from '@/pages/404'
 
+import Header from '@/components/ggw_home/Header'
+
 import {
   TITLE,
   SEO_DESC,
@@ -25,6 +27,7 @@ function MyApp(pageProps) {
         <meta name="description" content={SEO_DESC} />
       </Head>
       <AppRootWrapper>
+        <Header />
         <HashRouterViews
           views={{
             ...viewsPaths,
