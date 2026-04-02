@@ -3,6 +3,8 @@ import { DisconnectWalletButton } from '@/web3/DisconnectWalletButton'
 import { useInjectedWeb3 } from '@/web3/InjectedWeb3Provider'
 import { getShortAddress } from '@/helpers/etherscan'
 import { useState, useEffect } from 'react'
+import { useModal } from '@/contexts/ModalContext'
+
 
 const Header = (props) => {
   const {
@@ -12,8 +14,16 @@ const Header = (props) => {
     balance
   } = useInjectedWeb3()
 
+  const { openModal } = useModal()
+  
   const [ menuOpened, setMenuOpened ] = useState(false)
   
+  const testModal = () => {
+    openModal({
+      title: 'Title',
+      description: 'our message',
+    })
+  }
   const ArrowSvg = () => {
     return (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -21,7 +31,7 @@ const Header = (props) => {
   }
   const Logo = () => {
     return (
-      <div className="text-2xl font-bold text-purple-400 tracking-wider">GG<span className="text-white">WORLD</span></div>
+      <div onClick={testModal} className="text-2xl font-bold text-purple-400 tracking-wider">GG<span className="text-white">WORLD</span></div>
     )
   }
   return (
