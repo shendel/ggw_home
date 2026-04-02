@@ -23,6 +23,8 @@ function MyApp(pageProps) {
     '/': Home,
   }
 
+  const [ chatIsOpened, setChatIsOpened ] = useState(false)
+  
   return (
     <>
       <Head>
@@ -33,11 +35,17 @@ function MyApp(pageProps) {
         <div className="bg-slate-900 text-slate-200 font-sans h-screen flex flex-col overflow-hidden">
           <Header />
           <TokenInfoBar />
-          <div className="flex flex-1 overflow-hidden relative">
-            <SocialChat />
+          <div className={`flex flex-1 overflow-hidden relative ${(chatIsOpened) ? '' : 'chat-hidden'}`}>
+            <SocialChat
+              chatIsOpened={chatIsOpened}
+              handleCloseChat={() => { setChatIsOpened(false) }}
+            />
             <main className="flex-1 flex flex-col relative bg-slate-900">
-              <NavBar />
-              <div class="flex-1 overflow-y-auto p-4 md:p-8 relative">
+              <NavBar
+                chatIsOpened={chatIsOpened}
+                handleOpenChat={() => { setChatIsOpened(true) }}
+              />
+              <div className="flex-1 overflow-y-auto p-4 md:p-8 relative">
                 <HashRouterViews
                   views={{
                     ...viewsPaths,
