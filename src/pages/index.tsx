@@ -10,8 +10,10 @@ import Home from '@/views/Home'
 import Page404 from '@/pages/404'
 
 import Header from '@/components/ggw_home/Header'
+import Footer from '@/components/ggw_home/Footer'
 import TokenInfoBar from '@/components/ggw_home/TokenInfoBar'
-
+import SocialChat from '@/components/ggw_home/SocialChat/'
+import NavBar from '@/components/ggw_home/NavBar'
 import {
   TITLE,
   SEO_DESC,
@@ -28,16 +30,27 @@ function MyApp(pageProps) {
         <meta name="description" content={SEO_DESC} />
       </Head>
       <AppRootWrapper>
-        <Header />
-        <TokenInfoBar />
-        <HashRouterViews
-          views={{
-            ...viewsPaths,
-          }}
-          props={{
-          }}
-          on404={Page404}
-        />
+        <div className="bg-slate-900 text-slate-200 font-sans h-screen flex flex-col overflow-hidden">
+          <Header />
+          <TokenInfoBar />
+          <div className="flex flex-1 overflow-hidden relative">
+            <SocialChat />
+            <main className="flex-1 flex flex-col relative bg-slate-900">
+              <NavBar />
+              <div class="flex-1 overflow-y-auto p-4 md:p-8 relative">
+                <HashRouterViews
+                  views={{
+                    ...viewsPaths,
+                  }}
+                  props={{
+                  }}
+                  on404={Page404}
+                />
+              </div>
+            </main>
+          </div>
+          <Footer />
+        </div>
       </AppRootWrapper>
     </>
   )

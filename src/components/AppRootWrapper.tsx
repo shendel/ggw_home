@@ -6,10 +6,8 @@ export default function AppRootWrapper(props) {
     children,
   } = props
   return (
-    <div className="bg-slate-900 text-slate-200 font-sans h-screen flex flex-col overflow-hidden">
-      <AppRoot>
-        {children}
-      </AppRoot>
-    </div>
+    <AppRoot>
+      {children}
+    </AppRoot>
   )
 }
