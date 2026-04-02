@@ -10,6 +10,7 @@ import Home from '@/views/Home'
 import Page404 from '@/pages/404'
 
 import Header from '@/components/ggw_home/Header'
+import TokenInfoBar from '@/components/ggw_home/TokenInfoBar'
 
 import {
   TITLE,
@@ -28,6 +29,7 @@ function MyApp(pageProps) {
       </Head>
       <AppRootWrapper>
         <Header />
+        <TokenInfoBar />
         <HashRouterViews
           views={{
             ...viewsPaths,
