@@ -1,6 +1,8 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import React from "react"
+import { useHashRouterContext } from '@/contexts/HashRouterProvider'
+
 
 export default function HashRouterViews(props) {
   const {
@@ -14,6 +16,11 @@ export default function HashRouterViews(props) {
   }
   
   const router = useRouter()
+  
+  const {
+    setHash: _setHash,
+    setParams: _setParams
+  } = useHashRouterContext()
 
   const _processHash = (inHash) => {
     if (!inHash) return '/'
@@ -98,7 +105,17 @@ export default function HashRouterViews(props) {
   const [ activeView, setActiveView ] = useState(detectView(hash))
   
   useEffect(() => {
-    setActiveView(detectView(hash))
+    const _view = detectView(hash)
+    if (!_view) {
+      setTimeout(() => {
+        _setHash(false)
+      })
+    } else {
+      setTimeout(() => {
+        _setHash(_view.path)
+      })
+    }
+    setActiveView(_view)
   }, [ hash ])
 
   const render404 = () => {

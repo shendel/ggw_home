@@ -3,12 +3,10 @@ import { useEffect, useState, createContext, useContext } from "react"
 import React from "react"
 
 const HashRouterContext = createContext({
-  render404: () => {},
-  setRender404: () => {},
-  setGotoPage: () => {},
-  gotoPage: () => {},
   params: [],
-  path: '/'
+  hash: '/',
+  setParams: () => {},
+  setHash: () => {}
 })
 
 export const useHashRouterContext = () => {
@@ -21,20 +19,14 @@ export default function HashRouterProvider(props) {
   } = props
 
   const [ params, setParams ] = useState([])
-  const [ path, setPath ] = useState('/')
-  const [ render404, setRender404 ] = useState(() => {})
-  const [ gotoPage, setGotoPage ] = useState(() => {})
+  const [ hash, setHash ] = useState('/')
   
   return <HashRouterContext.Provider
     value={{
-      render404,
-      setRender404,
-      gotoPage,
-      setGotoPage,
       params,
       setParams,
-      path,
-      setPath
+      hash,
+      setHash
     }}
   >
     {children}

@@ -1,16 +1,19 @@
+import { useHashRouterContext } from '@/contexts/HashRouterProvider'
+
 const NavBar = (props) => {
   const {
     chatIsOpened = false,
     handleOpenChat = () => {},
   } = props
+  const {
+    hash: activePage
+  } = useHashRouterContext()
   
-  const pages = {
-    '#': 'News',
-    '#/flipcoin': 'FlipCoin',
-    '#/crashgame': 'CrashGame'
+  const menuItems = {
+    '/': 'News',
+    '/flipcoin': 'FlipCoin',
+    '/crashgame': 'CrashGame'
   }
-  const active = '#'
-  
   const classNormal = 'px-6 py-4 text-slate-400 hover:text-white hover:bg-slate-700 transition whitespace-nowrap'
   const classActive = 'px-6 py-4 text-purple-400 border-b-2 border-purple-400 font-bold bg-slate-800/50 whitespace-nowrap'
   const OpenChatButton = () => {
@@ -33,12 +36,16 @@ const NavBar = (props) => {
       {!chatIsOpened && (
         <OpenChatButton />
       )}
-      <a href="#" className="px-6 py-4 text-slate-400 hover:text-white hover:bg-slate-700 transition whitespace-nowrap">News</a>
-      <a href="#" className="px-6 py-4 text-purple-400 border-b-2 border-purple-400 font-bold bg-slate-800/50 whitespace-nowrap">FlipCoin</a>
-      <a href="#" className="px-6 py-4 text-slate-400 hover:text-white hover:bg-slate-700 transition whitespace-nowrap">CrashGame</a>
-      <a href="#" className="px-6 py-4 text-slate-400 hover:text-white hover:bg-slate-700 transition whitespace-nowrap">Bingo</a>
-      <a href="#" className="px-6 py-4 text-slate-400 hover:text-white hover:bg-slate-700 transition whitespace-nowrap">Lotto</a>
-      <a href="#" className="px-6 py-4 text-slate-400 hover:text-white hover:bg-slate-700 transition whitespace-nowrap">Dice</a>
+      {Object.keys(menuItems).map((path) => {
+        return (
+          <a href={`#${path}`}
+            key={path}
+            className={(activePage && path.toLowerCase() == activePage.toLowerCase()) ? classActive : classNormal}
+          >
+            {menuItems[path]}
+          </a>
+        )
+      })}
     </div>
   )
 }

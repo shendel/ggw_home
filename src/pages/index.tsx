@@ -7,6 +7,9 @@ import HashRouterViews from '@/components/HashRouterViews'
 
 import AppRootWrapper from '@/components/AppRootWrapper'
 import Home from '@/views/Home'
+import FlipCoin from '@/views/FlipCoin'
+import CrashGame from '@/views/CrashGame'
+
 import Page404 from '@/pages/404'
 
 import Header from '@/components/ggw_home/Header'
@@ -21,6 +24,8 @@ import {
 function MyApp(pageProps) {
   const viewsPaths = {
     '/': Home,
+    '/flipcoin': FlipCoin,
+    '/crashgame': CrashGame,
   }
 
   const [ chatIsOpened, setChatIsOpened ] = useState(false)

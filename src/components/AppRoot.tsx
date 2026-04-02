@@ -5,6 +5,7 @@ import InjectedWeb3Provider from '@/web3/InjectedWeb3Provider'
 
 import ModalProvider from "@/contexts/ModalContext";
 import NotificationProvider from "@/contexts/NotificationContext"
+import HashRouterProvider from '@/contexts/HashRouterProvider'
 import MarkDownProvider from '@/contexts/MarkDownContext'
 
 import NETWORKS from '@/constants/NETWORKS'
@@ -31,7 +32,9 @@ export default function AppRoot(props) {
           <Web3Connector chainIds={chainId} autoConnect={true}>
             <InjectedWeb3Provider chainId={chainId} chainIds={[chainId]}>
               <ModalProvider>
-                {children}
+                <HashRouterProvider>
+                  {children}
+                </HashRouterProvider>
               </ModalProvider>
             </InjectedWeb3Provider>
           </Web3Connector>
