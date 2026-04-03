@@ -8,12 +8,13 @@ const NavBar = (props) => {
   const {
     hash: activePage
   } = useHashRouterContext()
-  
+
   const menuItems = {
     '/': 'News',
     '/flipcoin': 'FlipCoin',
     '/crashgame': 'CrashGame'
   }
+
   const classNormal = 'px-6 py-4 text-slate-400 hover:text-white hover:bg-slate-700 transition whitespace-nowrap'
   const classActive = 'px-6 py-4 text-purple-400 border-b-2 border-purple-400 font-bold bg-slate-800/50 whitespace-nowrap'
   const OpenChatButton = () => {
@@ -31,6 +32,7 @@ const NavBar = (props) => {
       </div>
     )
   }
+  
   return (
     <div className="bg-slate-800/80 backdrop-blur border-b border-slate-700 flex items-center overflow-x-auto no-scrollbar shrink-0 z-10">
       {!chatIsOpened && (
