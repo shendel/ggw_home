@@ -102,10 +102,24 @@ export default function HashRouterViews(props) {
     return activeView
   }
   
-  const [ activeView, setActiveView ] = useState(detectView(hash))
+  const [displayHash, setDisplayHash] = useState(hash)
+  const [routeStage, setRouteStage] = useState('route-enter')
+  const [ activeView, setActiveView ] = useState(detectView(displayHash))
+
+  useEffect(() => {
+    if (hash === displayHash) return
+
+    setRouteStage('route-exit')
+    const timer = setTimeout(() => {
+      setDisplayHash(hash)
+      setRouteStage('route-enter')
+    }, 150)
+
+    return () => clearTimeout(timer)
+  }, [hash, displayHash])
   
   useEffect(() => {
-    const _view = detectView(hash)
+    const _view = detectView(displayHash)
     if (!_view) {
       setTimeout(() => {
         _setHash(false)
@@ -116,7 +130,7 @@ export default function HashRouterViews(props) {
       })
     }
     setActiveView(_view)
-  }, [ hash ])
+  }, [ displayHash ])
 
   const render404 = () => {
     return React.createElement(on404, {...props, ...ownProps, gotoPage })
@@ -124,7 +138,7 @@ export default function HashRouterViews(props) {
 
 
   if (activeView) {
-    return React.createElement(
+    const content = React.createElement(
       views[activeView.path],
       {
         ...props,
@@ -136,9 +150,18 @@ export default function HashRouterViews(props) {
         render404 
       }
     )
+    return (
+      <div className={`route-transition ${routeStage}`}>
+        {content}
+      </div>
+    )
   } else {
     if (on404) {
-      return React.createElement(on404, {...props, ...ownProps, gotoPage })
+      return (
+        <div className={`route-transition ${routeStage}`}>
+          {React.createElement(on404, {...props, ...ownProps, gotoPage })}
+        </div>
+      )
     } else {
       return null
     }

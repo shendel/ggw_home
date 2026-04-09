@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 import HashRouterViews from '@/components/HashRouterViews'
 import AppRootWrapper from '@/components/AppRootWrapper'
-import Home from '@/views/Home'
+import HomeInteractive from '@/views/HomeInteractive'
 import FlipCoin from '@/views/FlipCoin'
 import CrashGame from '@/views/CrashGame'
 import Page404 from '@/pages/404'
@@ -16,7 +16,7 @@ import { TITLE, SEO_DESC } from '@/config'
 
 function MyApp() {
   const viewsPaths = {
-    '/': Home,
+    '/': HomeInteractive,
     '/flipcoin': FlipCoin,
     '/crashgame': CrashGame,
   }
