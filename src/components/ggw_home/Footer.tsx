@@ -1,17 +1,17 @@
-const Footer = (props) => {
+const Footer = () => {
   return (
-    <footer className="h-10 bg-slate-900 border-t border-slate-800 flex items-center justify-center text-xs text-slate-500 shrink-0">
+    <footer className="h-12 border-t border-white/10 bg-slate-950/70 backdrop-blur-xl flex items-center justify-center text-xs text-slate-400 shrink-0 px-4 text-center">
       <span>
-        {`© Powered by`}
-        {` `}
+        Powered by{' '}
         <a
           href="https://whitelotto.com/"
           target="_blank"
-          className="hover:text-purple-400"
+          rel="noreferrer"
+          className="text-cyan-300 hover:text-cyan-200 transition"
         >
-          {`WhiteLotto.com`}
+          WhiteLotto
         </a>
-        {` - Lottery White Label and Turnkey Platform Provider.`}
+        {' '}for provably-fair Web3 gaming.
       </span>
     </footer>
   )
