@@ -1,48 +1,91 @@
 import { useHashRouterContext } from '@/contexts/HashRouterProvider'
 
+const menuItems = {
+  '/': 'News Feed',
+  '/flipcoin': 'FlipCoin',
+  '/crashgame': 'CrashGame'
+}
+
+const infoCards = [
+  { label: 'Players Online', value: '12,842' },
+  { label: 'Live Volume', value: '$2.41M' },
+  { label: 'Payout Speed', value: '1.4s' },
+]
+
 const NavBar = (props) => {
   const {
     chatIsOpened = false,
     handleOpenChat = () => {},
+    mode = 'top',
   } = props
+
   const {
     hash: activePage
   } = useHashRouterContext()
 
-  const menuItems = {
-    '/': 'News',
-    '/flipcoin': 'FlipCoin',
-    '/crashgame': 'CrashGame'
-  }
-
-  const classNormal = 'px-6 py-4 text-slate-400 hover:text-white hover:bg-slate-700 transition whitespace-nowrap'
-  const classActive = 'px-6 py-4 text-purple-400 border-b-2 border-purple-400 font-bold bg-slate-800/50 whitespace-nowrap'
-  const OpenChatButton = () => {
+  if (mode === 'sidebar') {
     return (
-      <div className="px-4 hidden md:block">
-        <button 
-          onClick={handleOpenChat}
-          className="flex items-center gap-2 text-slate-400 hover:text-purple-400 transition-colors text-sm font-medium bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-700/50 hover:border-purple-500/30"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-          </svg>
-          {`Social Chat`}
-        </button>
+      <div className="h-full flex flex-col gap-4">
+        <div>
+          <div className="text-xs mono text-slate-400 mb-2">GAME LOBBY</div>
+          <div className="space-y-2">
+            {Object.keys(menuItems).map((path) => {
+              const isActive = activePage && path.toLowerCase() === activePage.toLowerCase()
+              return (
+                <a
+                  href={`#${path}`}
+                  key={path}
+                  className={isActive
+                    ? 'block px-4 py-3 rounded-xl text-slate-950 bg-gradient-to-r from-orange-400 to-cyan-300 font-semibold shadow-lg shadow-orange-500/20'
+                    : 'block px-4 py-3 rounded-xl text-slate-200 bg-white/5 hover:bg-white/10 transition'}
+                >
+                  {menuItems[path]}
+                </a>
+              )
+            })}
+          </div>
+        </div>
+
+        {!chatIsOpened && (
+          <button
+            onClick={handleOpenChat}
+            className="w-full px-4 py-3 rounded-xl text-slate-200 bg-cyan-400/15 hover:bg-cyan-400/25 transition text-sm"
+          >
+            Open Social Chat
+          </button>
+        )}
+
+        <div className="space-y-2 mt-2">
+          {infoCards.map((item) => (
+            <div key={item.label} className="rounded-xl bg-white/5 border border-white/10 p-3">
+              <div className="text-[11px] text-slate-400">{item.label}</div>
+              <div className="text-sm font-semibold mono">{item.value}</div>
+            </div>
+          ))}
+        </div>
       </div>
     )
   }
-  
+
   return (
-    <div className="bg-slate-800/80 backdrop-blur border-b border-slate-700 flex items-center overflow-x-auto no-scrollbar shrink-0 z-10">
+    <div className="flex items-center overflow-x-auto no-scrollbar gap-2">
       {!chatIsOpened && (
-        <OpenChatButton />
+        <button
+          onClick={handleOpenChat}
+          className="px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition text-sm"
+        >
+          Social Chat
+        </button>
       )}
+
       {Object.keys(menuItems).map((path) => {
+        const isActive = activePage && path.toLowerCase() === activePage.toLowerCase()
         return (
           <a href={`#${path}`}
             key={path}
-            className={(activePage && path.toLowerCase() == activePage.toLowerCase()) ? classActive : classNormal}
+            className={isActive
+              ? 'px-4 py-2 text-slate-950 bg-gradient-to-r from-orange-400 to-cyan-300 font-semibold whitespace-nowrap rounded-xl shadow-lg shadow-orange-500/20'
+              : 'px-4 py-2 text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap rounded-xl'}
           >
             {menuItems[path]}
           </a>

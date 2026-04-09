@@ -2,41 +2,130 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
-        
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root {
+    --bg-900: #090b10;
+    --bg-800: #11151f;
+    --bg-700: #161d2b;
+    --line: rgba(255, 255, 255, 0.08);
+    --text-100: #f7fafc;
+    --text-300: #c2ccdb;
+    --text-500: #8593a9;
+    --accent-primary: #f97316;
+    --accent-secondary: #22d3ee;
+}
+
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
+
 body {
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--text-100);
+    background:
+        radial-gradient(circle at 14% 10%, rgba(249, 115, 22, 0.22), transparent 40%),
+        radial-gradient(circle at 90% 0%, rgba(34, 211, 238, 0.16), transparent 35%),
+        radial-gradient(circle at 50% 100%, rgba(20, 184, 166, 0.12), transparent 35%),
+        var(--bg-900);
+    min-height: 100vh;
 }
+
 .mono {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'IBM Plex Mono', monospace;
 }
-/* Плавная анимация для меню */
+
+.glass-surface {
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+}
+
+.neon-outline {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 18px 42px rgba(2, 8, 23, 0.6);
+}
+
+.hero-glow {
+    position: absolute;
+    inset: -30%;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(249, 115, 22, 0.16), transparent 34%),
+      radial-gradient(circle at 70% 45%, rgba(34, 211, 238, 0.18), transparent 30%);
+    filter: blur(40px);
+    animation: pulseGlow 7s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(1.12); opacity: 1; }
+}
+
+@keyframes floatIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+    animation: floatIn 0.55s ease forwards;
+}
+
+.counter-glow {
+    text-shadow: 0 0 16px rgba(34, 211, 238, 0.2);
+}
+
+.tilt-card {
+    transform-style: preserve-3d;
+    transition: transform 0.16s ease, box-shadow 0.25s ease;
+    will-change: transform;
+}
+
+.tilt-card:hover {
+    box-shadow: 0 16px 40px rgba(2, 8, 23, 0.5);
+}
+
+@keyframes feedIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.feed-item-in {
+    animation: feedIn 0.35s ease;
+}
+
+.route-transition {
+    transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.route-enter {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.route-exit {
+    opacity: 0;
+    transform: translateY(8px);
+}
+
 .mobile-menu {
     transition: transform 0.3s ease-in-out;
 }
+
 .mobile-menu.closed {
     transform: translateX(-100%);
 }
+
 .mobile-menu.open {
     transform: translateX(0);
 }
-/* --- CHAT ANIMATION STYLES --- */
-        
-/* Контейнер для чата, чтобы анимировать ширину */
+
 .chatSidebar {
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                opacity 0.3s ease, 
-                padding 0.4s ease;
-    overflow: hidden; /* Скрываем контент при сужении */
-    white-space: nowrap; /* Запрещаем перенос текста во время анимации */
-    flex-shrink: 0; /* Запрещаем сжиматься помимо заданной ширины */
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, padding 0.4s ease;
+    overflow: hidden;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
-/* Состояние скрытого чата */
 .chat-hidden .chatSidebar {
     width: 0 !important;
     padding-left: 0;
@@ -46,56 +135,58 @@ body {
     opacity: 0;
 }
 
-/* Скрываем внутренние элементы чата, когда он закрыт, чтобы не мелькали */
 .chat-hidden .chatSidebar > * {
     opacity: 0;
     transition: opacity 0.2s;
 }
 
-/* Кнопка открытия чата */
 .openChatBtn {
     transition: all 0.3s ease;
 }
+
 .chat-hidden .openChatBtn {
     opacity: 1;
     transform: translateX(0);
     pointer-events: auto;
 }
+
 .openChatBtn {
     opacity: 0;
     transform: translateX(-20px);
     pointer-events: none;
 }
 
-/* Затемнение фона */
 .overlay {
     transition: opacity 0.3s ease-in-out;
 }
+
 .overlay.hidden {
     opacity: 0;
     pointer-events: none;
 }
+
 .overlay.visible {
     opacity: 1;
     pointer-events: auto;
 }
 
-/* Анимация гамбургера */
 .hamburger-line {
     transition: all 0.3s ease-in-out;
 }
 
-/* Кастомный скроллбар для красоты */
 ::-webkit-scrollbar {
     width: 8px;
 }
+
 ::-webkit-scrollbar-track {
-    background: #0f172a; 
+    background: #0d1119;
 }
+
 ::-webkit-scrollbar-thumb {
-    background: #334155; 
+    background: #2a3446;
     border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-    background: #475569; 
+    background: #3d4b63;
 }

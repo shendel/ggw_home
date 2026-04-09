@@ -1,9 +1,11 @@
+import { useEffect, useMemo, useState } from 'react'
+
 import { useInjectedWeb3 } from '@/web3/InjectedWeb3Provider'
 
-const stats = [
-  { label: '24h Bet Volume', value: '$2.41M' },
-  { label: 'Active Players', value: '12,842' },
-  { label: 'Avg Settlement', value: '1.4s' },
+const statConfig = [
+  { label: '24h Bet Volume', target: 2410000, prefix: '$', compact: true },
+  { label: 'Active Players', target: 12842 },
+  { label: 'Avg Settlement', target: 1.4, suffix: 's', decimals: 1 },
 ]
 
 const games = [
@@ -33,7 +35,137 @@ const bullets = [
   'Fast rounds, low latency UI, and mobile-optimized controls',
 ]
 
-export default function Home() {
+const feedTemplates = [
+  { user: 'alpha.whale', action: 'cashed out Crash at', value: '2.18x', tone: 'text-emerald-300' },
+  { user: 'flip.master', action: 'won FlipCoin', value: '+$84', tone: 'text-cyan-300' },
+  { user: 'zero2hero', action: 'opened high-risk Crash bet', value: '$120', tone: 'text-orange-300' },
+  { user: 'mika.chain', action: 'stacked streak bonus', value: '+12%', tone: 'text-teal-300' },
+  { user: 'lunarbyte', action: 'joined table', value: 'FlipCoin', tone: 'text-sky-300' },
+]
+
+const createFeedEvent = (idOffset = 0) => {
+  const item = feedTemplates[Math.floor(Math.random() * feedTemplates.length)]
+  return {
+    id: `${Date.now()}-${idOffset}`,
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    ...item,
+  }
+}
+
+const formatValue = (value, options = {}) => {
+  const {
+    prefix = '',
+    suffix = '',
+    compact = false,
+    decimals,
+  } = options
+
+  const formatted = compact
+    ? new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(value)
+    : new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: decimals ?? 0,
+      maximumFractionDigits: decimals ?? 0,
+    }).format(value)
+
+  return `${prefix}${formatted}${suffix}`
+}
+
+const AnimatedCounter = ({ target, ...opts }) => {
+  const [value, setValue] = useState(0)
+
+  useEffect(() => {
+    const duration = 900
+    const start = performance.now()
+    let raf = 0
+
+    const tick = (now) => {
+      const progress = Math.min(1, (now - start) / duration)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setValue(target * eased)
+      if (progress < 1) {
+        raf = requestAnimationFrame(tick)
+      }
+    }
+
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [target])
+
+  return <span className="counter-glow">{formatValue(value, opts)}</span>
+}
+
+const TiltCard = ({ href, className, children, style }) => {
+  const [transform, setTransform] = useState('perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)')
+
+  const onMouseMove = (event) => {
+    const rect = event.currentTarget.getBoundingClientRect()
+    const relativeX = (event.clientX - rect.left) / rect.width
+    const relativeY = (event.clientY - rect.top) / rect.height
+
+    const rotateY = (relativeX - 0.5) * 8
+    const rotateX = (0.5 - relativeY) * 8
+
+    setTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.015)`)
+  }
+
+  return (
+    <a
+      href={href}
+      className={`tilt-card ${className}`}
+      style={{ ...style, transform }}
+      onMouseMove={onMouseMove}
+      onMouseLeave={() => setTransform('perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)')}
+    >
+      {children}
+    </a>
+  )
+}
+
+const LiveFeed = () => {
+  const initialFeed = useMemo(() => {
+    return [0, 1, 2, 3].map((idx) => createFeedEvent(idx))
+  }, [])
+
+  const [feed, setFeed] = useState(initialFeed)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFeed((prev) => [createFeedEvent(), ...prev].slice(0, 5))
+    }, 2300)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div className="rounded-xl p-3 bg-white/5 border border-white/10">
+      <div className="flex items-center justify-between text-xs text-slate-300 mb-2">
+        <span className="mono">LIVE FEED</span>
+        <span className="inline-flex items-center gap-1 text-emerald-300">
+          <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+          live
+        </span>
+      </div>
+
+      <div className="space-y-2">
+        {feed.map((event) => (
+          <div key={event.id} className="text-xs text-slate-300 rounded-lg px-2 py-1.5 bg-slate-950/40 border border-white/5 feed-item-in">
+            <div className="flex justify-between items-center gap-2">
+              <span className="text-slate-400 mono">{event.time}</span>
+              <span className={`mono ${event.tone}`}>{event.value}</span>
+            </div>
+            <div>
+              <span className="text-white">{event.user}</span>
+              {' '}
+              <span>{event.action}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default function HomeInteractive() {
   const { isConnected, injectedAccount } = useInjectedWeb3()
 
   return (
@@ -90,20 +222,30 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-3 gap-2">
-              {stats.map((item) => (
+              {statConfig.map((item) => (
                 <div key={item.label} className="rounded-lg bg-white/5 border border-white/10 p-2.5">
                   <div className="text-[10px] text-slate-400 uppercase tracking-wide">{item.label}</div>
-                  <div className="mt-1 text-sm font-semibold">{item.value}</div>
+                  <div className="mt-1 text-sm font-semibold">
+                    <AnimatedCounter
+                      target={item.target}
+                      prefix={item.prefix}
+                      suffix={item.suffix}
+                      decimals={item.decimals}
+                      compact={item.compact}
+                    />
+                  </div>
                 </div>
               ))}
             </div>
+
+            <LiveFeed />
           </div>
         </div>
       </div>
 
       <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
         {games.map((game, idx) => (
-          <a
+          <TiltCard
             href={game.href}
             key={game.title}
             className={`fade-up rounded-2xl border border-white/10 overflow-hidden p-5 bg-gradient-to-br ${game.accent} hover:translate-y-[-4px] transition duration-300`}
@@ -112,8 +254,8 @@ export default function Home() {
             <div className="text-xs mono text-slate-300 mb-3">FEATURED MODE</div>
             <h3 className="text-xl font-semibold mb-2">{game.title}</h3>
             <p className="text-sm text-slate-200/90 leading-relaxed">{game.desc}</p>
-            <div className="mt-4 text-cyan-200 text-sm">Open Mode -></div>
-          </a>
+            <div className="mt-4 text-cyan-200 text-sm">Open Mode -&gt;</div>
+          </TiltCard>
         ))}
       </div>
 
